@@ -140,9 +140,15 @@ public:
         this->current_size = 0;
         this->data = new T[capacity];
     }
-    Heap(bool is_min_heap, T *source_arr, int arr_size)
+    Heap(bool is_min_heap, std::vector data)
     {
-        // working on implementation
+        this->is_min_heap = true;
+        this->capacity = data.size() << 2;
+        this->current_size = data.size();
+        // offset the data by 1
+        data.insert(0);
+        // make data point to the vector
+        this->data = data.data();
     }
 
     void push(T item)
