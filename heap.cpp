@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <vector>
 
 template <typename T>
@@ -125,6 +126,32 @@ private:
         arr[index2] = temp;
     }
 
+    std::vector min_heap_sort()
+    {
+        std::vector<T> sorted_arr(current_size);
+
+        for (int i = 0; i < current_size, i++)
+        {
+            sorted_arr.push_back(arr[1]);
+            swap(1, current_size);
+            current_size -= 1;
+        }
+        return sorted_arr;
+    }
+
+    std::vector max_heap_sort()
+    {
+        std::vector<T> sorted_arr(current_size);
+        for (int i = 0; i < current_size, i++)
+        {
+            sorted_arr.push_back(arr[1]);
+            swap(1, current_size);
+            current_size -= 1;
+        }
+        std::reverse(sorted_arr.begin(), sorted_arr.end());
+        return sorted_arr;
+    }
+
 public:
     Heap()
     {
@@ -149,6 +176,10 @@ public:
         data.insert(0);
         // make data point to the vector
         this->data = data.data();
+        if (!is_valid_heap(1))
+        {
+            build_heap();
+        }
     }
 
     void push(T item)
@@ -189,9 +220,13 @@ public:
         return data[1];
     }
 
-    T *heap_sort()
+    std::vector<T> heap_sort()
     {
-        // working on implementation
+        if (is_min_heap())
+        {
+            return min_heap_sort();
+        }
+        return max_heap_sort();
     }
 
     bool is_min_heap()
