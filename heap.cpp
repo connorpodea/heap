@@ -1,18 +1,19 @@
 #include <algorithm>
+#include <iostream>
 #include <vector>
 
 template <typename T>
 class Heap
 {
 private:
-    bool is_min_heap;
+    bool min_heap;
     T *data;
     int capacity;
     int current_size;
 
     void increase_capacity()
     {
-        capacity <<= 2;
+        capacity <<= 1;
         T *new_arr = new T[capacity];
         for (int i = 1; i < current_size; i++)
         {
@@ -21,9 +22,9 @@ private:
         data = new_arr;
     }
 
-    bool is_higher_priority(T index1, T index2)
+    bool is_higher_priority(int index1, int index2)
     {
-        if (is_min_heap)
+        if (is_min_heap())
         {
             return data[index1] < data[index2];
         }
@@ -35,8 +36,8 @@ private:
 
     int larger_child(int parent)
     {
-        int left_child = parent << 2;
-        int right_child = (parent << 2) + 1;
+        int left_child = parent << 1;
+        int right_child = (parent << 1) + 1;
 
         if (is_higher_priority(left_child, right_child))
         {
@@ -54,35 +55,36 @@ private:
         }
 
         int parent_index = index;
-        int left_child_index = index << 2;
-        int right_child_index = (index << 2) + 1;
+        int left_child_index = index << 1;
+        int right_child_index = (index << 1) + 1;
+
+        int priority_index = parent_index;
         // else, compare with left and right children, swap & recall heapify if necessary
-        if (!(is_higher_priority(parent_index, left_child_index) && is_higher_priority(parent_index, right_child_index)))
+        if (is_higher_priority(left_child_index, parent_index) && left_child_index <= current_size)
         {
-            // one of the children has higher priority than the parent
-            if (is_higher_priority(left_child_index, right_child_index))
-            {
-                // left child has higher priority than right child
-                swap(parent_index, left_child_index);
-                heapify(left_child_index)
-            }
-            // right child has higher priority than left child
-            swap(parent_index, right_child_index);
-            heapify(right_child_index);
+            priority_index = left_child_index;
         }
-        // base case 2: parent has higher priority than both children
+        if (is_higher_priority(right_child_index, priority_index) && right_child_index <= current_size)
+        {
+            priority_index = right_child_index;
+        }
+        if (priority_index != parent_index)
+        {
+            swap(parent_index, priority_index);
+            heapify(priority_index);
+        }
         return;
     }
 
     void push_up(int index)
     {
         // base case: the item is at the top of the heap
-        if (index == 0)
+        if (index == 1)
         {
             return;
         }
-        // else, check if the node at index > parent
-        if (data[index] > data[index / 2])
+        // else, check if the node at index has higher priority than the parent
+        if (is_higher_priority(index, index / 2))
         {
             // swap these elements, and call push_up on the elements new index
             swap(index, index / 2);
@@ -101,8 +103,8 @@ private:
     bool is_valid_heap(int index)
     {
         int parent_index = index;
-        int left_child_index = index << 2;
-        int right_child_index = (index << 2) + 1;
+        int left_child_index = index << 1;
+        int right_child_index = (index << 1) + 1;
 
         // a heap is valid if each subtree is a valid heap
         // base case: leaf node is reached
@@ -121,55 +123,39 @@ private:
 
     void swap(int index1, int index2)
     {
-        T temp = arr[index1];
-        arr[index1] = arr[index2];
-        arr[index2] = temp;
+        T temp = data[index1];
+        data[index1] = data[index2];
+        data[index2] = temp;
     }
 
-    std::vector min_heap_sort()
+    std::vector<T> min_heap_sort(int *data_copy)
     {
-        std::vector<T> sorted_arr(current_size);
-
-        for (int i = 0; i < current_size, i++)
-        {
-            sorted_arr.push_back(arr[1]);
-            swap(1, current_size);
-            current_size -= 1;
-        }
-        return sorted_arr;
+        // rethinking
     }
 
-    std::vector max_heap_sort()
+    std::vector<T> max_heap_sort(int *data_copy)
     {
-        std::vector<T> sorted_arr(current_size);
-        for (int i = 0; i < current_size, i++)
-        {
-            sorted_arr.push_back(arr[1]);
-            swap(1, current_size);
-            current_size -= 1;
-        }
-        std::reverse(sorted_arr.begin(), sorted_arr.end());
-        return sorted_arr;
+        // rethinking
     }
 
 public:
     Heap()
     {
-        this->is_min_heap = true;
+        this->min_heap = true;
         this->capacity = 100;
         this->current_size = 0;
         this->data = new T[capacity];
     }
     Heap(bool is_min_heap)
     {
-        this->is_min_heap = is_min_heap;
+        this->min_heap = is_min_heap;
         this->capacity = 100;
         this->current_size = 0;
         this->data = new T[capacity];
     }
-    Heap(bool is_min_heap, std::vector data)
+    Heap(bool is_min_heap, std::vector<T> data)
     {
-        this->is_min_heap = true;
+        this->min_heap = true;
         this->capacity = data.size() << 2;
         this->current_size = data.size();
         // offset the data by 1
@@ -201,8 +187,8 @@ public:
         {
 
             swap(1, current_size);
-            heapify(1);
             current_size -= 1;
+            heapify(1);
             return data[current_size + 1];
         }
         // case 2: decrement size, return head
@@ -222,21 +208,26 @@ public:
 
     std::vector<T> heap_sort()
     {
+        int *data_copy;
+        for (int i = 0; i < current_size; i++)
+        {
+            data_copy[i] = data[i + 1];
+        }
         if (is_min_heap())
         {
-            return min_heap_sort();
+            return min_heap_sort(data_copy);
         }
-        return max_heap_sort();
+        return max_heap_sort(data_copy);
     }
 
     bool is_min_heap()
     {
-        return this->is_min_heap ? true : false;
+        return this->min_heap ? true : false;
     }
 
     bool is_max_heap()
     {
-        return this->is_min_heap ? false : true;
+        return this->min_heap ? false : true;
     }
 
     int get_capacity()
@@ -246,11 +237,28 @@ public:
 
     int get_current_size()
     {
-        return this->get_current_size();
+        return this->current_size;
     }
 
     bool is_empty()
     {
-        return this->get_current_size == 0;
+        return this->current_size == 0;
     }
 };
+
+int main()
+{
+    Heap<int> h(true);
+
+    h.push(4);
+    h.push(1);
+    h.push(7);
+    h.push(2);
+
+    auto sorted = h.heap_sort();
+
+    for (int x : sorted)
+    {
+        std::cout << x << " ";
+    }
+}
