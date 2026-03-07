@@ -9,15 +9,15 @@ private:
     int capacity;
     int current_size;
 
-    T *increase_capacity()
+    void increase_capacity()
     {
-        this->capacity <<= 2;
-        T *new_arr = new T[this->capacity];
-        for (int i = 1; i < this->current_size; i++)
+        capacity <<= 2;
+        T *new_arr = new T[capacity];
+        for (int i = 1; i < current_size; i++)
         {
-            new_arr[i] = this->data[i];
+            new_arr[i] = data[i];
         }
-        return new_arr;
+        data = new_arr;
     }
 
     void heapify()
@@ -30,14 +30,32 @@ private:
         // working on implementation
     }
 
-    bool is_valid_heap()
+    bool is_valid_heap(int i)
     {
         // working on implementation
     }
 
-    void swap()
+    void push_up(int index)
     {
-        // working on implementation
+        // base case: the item is at the top of the heap
+        if (index == 0)
+        {
+            return;
+        }
+        // else, check if the node at index > parent
+        if (data[index] > data[index / 2])
+        {
+            // swap these elements, and call push_up on the elements new index
+            swap(index, index / 2);
+            push_up(index / 2);
+        }
+    }
+
+    void swap(int index1, int index2)
+    {
+        T temp = arr[index1];
+        arr[index1] = arr[index2];
+        arr[index2] = temp;
     }
 
 public:
@@ -55,7 +73,13 @@ public:
 
     void push(T item)
     {
-        // working on implementation
+        if (current_size + 1 > capacity)
+        {
+            increase_capacity();
+        }
+        current_size += 1;
+        data[current_size] = item;
+        push_up(current_size);
     }
 
     T pop()
