@@ -91,7 +91,10 @@ private:
 
     void build_heap()
     {
-        // working on implementation
+        for (int i = current_size / 2; i > 0; i--)
+        {
+            heapify(i);
+        }
     }
 
     bool is_valid_heap(int index)
@@ -123,6 +126,13 @@ private:
     }
 
 public:
+    Heap()
+    {
+        this->is_min_heap = true;
+        this->capacity = 100;
+        this->current_size = 0;
+        this->data = new T[capacity];
+    }
     Heap(bool is_min_heap)
     {
         this->is_min_heap = is_min_heap;
@@ -147,7 +157,7 @@ public:
         push_up(current_size);
     }
 
-    T pop_and_return()
+    T pop()
     {
         // case 1: swap head with tail, decrement size, heapify the new head, return old head
         if (!is_empty())
