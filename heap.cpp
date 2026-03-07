@@ -11,23 +11,33 @@ private:
 
     T *increase_capacity()
     {
-        capacity <<= 2;
-        T *new_arr = new T[capacity];
-        for (int i = 1; i < current_size; i++)
+        this->capacity <<= 2;
+        T *new_arr = new T[this->capacity];
+        for (int i = 1; i < this->current_size; i++)
         {
-            new_arr[i] = data[i];
+            new_arr[i] = this->data[i];
         }
         return new_arr;
     }
 
     void heapify()
     {
-        //
+        // working on implementation
     }
 
     void build_heap()
     {
-        //
+        // working on implementation
+    }
+
+    bool is_valid_heap()
+    {
+        // working on implementation
+    }
+
+    void swap()
+    {
+        // working on implementation
     }
 
 public:
@@ -40,46 +50,46 @@ public:
     }
     Heap(bool is_min_heap, T *source_arr, int arr_size)
     {
-        //
+        // working on implementation
     }
 
     void push(T item)
     {
-        //
+        // working on implementation
     }
 
     T pop()
     {
-        //
+        // working on implementation
     }
 
     T peak()
     {
-        //
+        // working on implementation
     }
 
     bool is_min_heap()
     {
-        //
+        // working on implementation
     }
 
     bool is_max_heap()
     {
-        //
+        // working on implementation
     }
 
     int get_capacity()
     {
-        //
+        // working on implementation
     }
 
     int get_current_size()
     {
-        //
+        // working on implementation
     }
 
     bool is_empty()
     {
-        //
+        // working on implementation
     }
 };
