@@ -70,26 +70,26 @@ public:
 
     bool is_min_heap()
     {
-        // working on implementation
+        return this->is_min_heap ? true : false;
     }
 
     bool is_max_heap()
     {
-        // working on implementation
+        return this->is_min_heap ? false : true;
     }
 
     int get_capacity()
     {
-        // working on implementation
+        return this->capacity;
     }
 
     int get_current_size()
     {
-        // working on implementation
+        return this->get_current_size();
     }
 
     bool is_empty()
     {
-        // working on implementation
+        return this->get_current_size == 0;
     }
 };
