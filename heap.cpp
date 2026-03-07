@@ -20,7 +20,7 @@ private:
         data = new_arr;
     }
 
-    bool higher_priority(T index1, T index2)
+    bool is_higher_priority(T index1, T index2)
     {
         if (is_min_heap)
         {
@@ -32,35 +32,41 @@ private:
         }
     }
 
-    void heapify()
+    int larger_child(int parent)
     {
-        // working on implementation
+        int left_child = parent << 2;
+        int right_child = (parent << 2) + 1;
+
+        if (is_higher_priority(left_child, right_child))
+        {
+            return left_child;
+        }
+        return right_child;
     }
 
-    void build_heap()
+    void heapify(int index)
     {
-        // working on implementation
-    }
-
-    bool is_valid_heap(int index)
-    {
-        int parent = index;
-        int left_child = index * 2;
-        int right_child = index * 2 + 1;
-
-        // a heap is valid if each subtree is a valid heap
-        // base case: leaf node is reached
-        if (left_child > current_size)
+        // base case 1: the item is now a leaf node
+        if (index > current_size / 2)
         {
-            return true;
+            return;
         }
-
-        if (higher_priority(parent, left_child) && higher_priority(parent, right_child))
+        // else, compare with left and right children, swap & recall heapify if necessary
+        if (!(is_higher_priority(index, index << 2) && is_higher_priority(index, (index << 2) + 1)))
         {
-            return is_valid_heap(left_child);
-            return is_valid_heap(right_child);
+            // one of the children has higher priority than the parent
+            if (is_higher_priority(index << 2, (index << 2) + 1))
+            {
+                // left child has higher priority than right child
+                swap(index, index << 2);
+                heapify(index << 2)
+            }
+            // right child has higher priority than left child
+            swap(index, (index << 2) + 1);
+            heapify((index << 2) + 1);
         }
-        return false;
+        // base case 2: parent has higher priority than both children
+        return;
     }
 
     void push_up(int index)
@@ -77,6 +83,32 @@ private:
             swap(index, index / 2);
             push_up(index / 2);
         }
+    }
+
+    void build_heap()
+    {
+        // working on implementation
+    }
+
+    bool is_valid_heap(int index)
+    {
+        int parent = index;
+        int left_child = index << 2;
+        int right_child = (index << 2) + 1;
+
+        // a heap is valid if each subtree is a valid heap
+        // base case: leaf node is reached
+        if (left_child > current_size)
+        {
+            return true;
+        }
+
+        if (is_higher_priority(parent, left_child) && is_higher_priority(parent, right_child))
+        {
+            return is_valid_heap(left_child);
+            return is_valid_heap(right_child);
+        }
+        return false;
     }
 
     void swap(int index1, int index2)
