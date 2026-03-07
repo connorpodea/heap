@@ -51,19 +51,23 @@ private:
         {
             return;
         }
+
+        int parent_index = index;
+        int left_child_index = index << 2;
+        int right_child_index = (index << 2) + 1;
         // else, compare with left and right children, swap & recall heapify if necessary
-        if (!(is_higher_priority(index, index << 2) && is_higher_priority(index, (index << 2) + 1)))
+        if (!(is_higher_priority(parent_index, left_child_index) && is_higher_priority(parent_index, right_child_index)))
         {
             // one of the children has higher priority than the parent
-            if (is_higher_priority(index << 2, (index << 2) + 1))
+            if (is_higher_priority(left_child_index, right_child_index))
             {
                 // left child has higher priority than right child
-                swap(index, index << 2);
-                heapify(index << 2)
+                swap(parent_index, left_child_index);
+                heapify(left_child_index)
             }
             // right child has higher priority than left child
-            swap(index, (index << 2) + 1);
-            heapify((index << 2) + 1);
+            swap(parent_index, right_child_index);
+            heapify(right_child_index);
         }
         // base case 2: parent has higher priority than both children
         return;
@@ -92,21 +96,21 @@ private:
 
     bool is_valid_heap(int index)
     {
-        int parent = index;
-        int left_child = index << 2;
-        int right_child = (index << 2) + 1;
+        int parent_index = index;
+        int left_child_index = index << 2;
+        int right_child_index = (index << 2) + 1;
 
         // a heap is valid if each subtree is a valid heap
         // base case: leaf node is reached
-        if (left_child > current_size)
+        if (left_child_index > current_size)
         {
             return true;
         }
 
-        if (is_higher_priority(parent, left_child) && is_higher_priority(parent, right_child))
+        if (is_higher_priority(parent_index, left_child_index) && is_higher_priority(parent_index, right_child_index))
         {
-            return is_valid_heap(left_child);
-            return is_valid_heap(right_child);
+            return is_valid_heap(left_child_index);
+            return is_valid_heap(right_child_index);
         }
         return false;
     }
@@ -137,19 +141,36 @@ public:
         {
             increase_capacity();
         }
+
         current_size += 1;
         data[current_size] = item;
         push_up(current_size);
     }
 
-    T pop()
+    T pop_and_return()
     {
-        // working on implementation
+        // case 1: swap head with tail, decrement size, heapify the new head, return old head
+        if (!is_empty())
+        {
+
+            swap(1, current_size);
+            heapify(1);
+            current_size -= 1;
+            return data[current_size + 1];
+        }
+        // case 2: decrement size, return head
+        if (current_size == 1)
+        {
+            current_size -= 1;
+            return data[current_size + 1];
+        }
+        // case 3: heap is empty
+        throw std::underflow_error("heap is empty.");
     }
 
     T peak()
     {
-        // working on implementation
+        return data[1];
     }
 
     T *heap_sort()
@@ -157,8 +178,7 @@ public:
         // working on implementation
     }
 
-    bool
-    is_min_heap()
+    bool is_min_heap()
     {
         return this->is_min_heap ? true : false;
     }
