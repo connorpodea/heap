@@ -20,6 +20,18 @@ private:
         data = new_arr;
     }
 
+    bool higher_priority(T index1, T index2)
+    {
+        if (is_min_heap)
+        {
+            return data[index1] < data[index2];
+        }
+        else
+        {
+            return data[index1] > data[index2];
+        }
+    }
+
     void heapify()
     {
         // working on implementation
@@ -30,9 +42,25 @@ private:
         // working on implementation
     }
 
-    bool is_valid_heap(int i)
+    bool is_valid_heap(int index)
     {
-        // working on implementation
+        int parent = index;
+        int left_child = index * 2;
+        int right_child = index * 2 + 1;
+
+        // a heap is valid if each subtree is a valid heap
+        // base case: leaf node is reached
+        if (left_child > current_size)
+        {
+            return true;
+        }
+
+        if (higher_priority(parent, left_child) && higher_priority(parent, right_child))
+        {
+            return is_valid_heap(left_child);
+            return is_valid_heap(right_child);
+        }
+        return false;
     }
 
     void push_up(int index)
@@ -92,7 +120,13 @@ public:
         // working on implementation
     }
 
-    bool is_min_heap()
+    T *heap_sort()
+    {
+        // working on implementation
+    }
+
+    bool
+    is_min_heap()
     {
         return this->is_min_heap ? true : false;
     }
