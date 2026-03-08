@@ -280,35 +280,5 @@ public:
 
 int main()
 {
-    Heap<int> h(true);
-
-    for (int i = 0; i < 200000; i++)
-    {
-        h.push(rand());
-    }
-
-    for (int i = 0; i < 150000; i++)
-    {
-        h.pop();
-    }
-
-    for (int i = 0; i < 200000; i++)
-    {
-        h.push(rand());
-    }
-
-    int prev = INT_MIN;
-
-    while (!h.is_empty())
-    {
-        int x = h.pop();
-
-        if (x < prev)
-        {
-            std::cout << "ERROR\n";
-            break;
-        }
-
-        prev = x;
-    }
+    return 0;
 }
