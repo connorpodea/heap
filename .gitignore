@@ -20,3 +20,9 @@ release/
 # --- OS Specific ---
 .DS_Store
 Thumbs.db
+
+# Ignore the specific compiled binary
+heap
+
+# Ignore macOS debug symbols
+*.dSYM/

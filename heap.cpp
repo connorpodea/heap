@@ -13,6 +13,7 @@ private:
 
     void increase_capacity()
     {
+        // double the capacity and transfer all items
         capacity <<= 1;
         T *new_arr = new T[capacity + 1];
         for (int i = 1; i <= current_size; i++)
@@ -26,6 +27,7 @@ private:
 
     bool is_higher_priority(int index1, int index2)
     {
+        // easy method call to work for both min and max heaps
         if (is_min_heap())
         {
             return data[index1] < data[index2];
@@ -52,15 +54,18 @@ private:
         bool right_child_exists = right_child_index <= current_size;
 
         int priority_index = parent_index;
-        // else, compare with left and right children, swap & recall heapify if necessary
+
+        // compare parent with left child
         if (left_child_exists && is_higher_priority(left_child_index, parent_index))
         {
             priority_index = left_child_index;
         }
+        // compare right child with the current highest priority
         if (right_child_exists && is_higher_priority(right_child_index, priority_index))
         {
             priority_index = right_child_index;
         }
+        // as long as the highest priority is not the parent, swap and heapify on the item with lower priority
         if (priority_index != parent_index)
         {
             swap(parent_index, priority_index);
@@ -87,6 +92,7 @@ private:
 
     void build_heap()
     {
+        // only iterate through size / 2 since by definition, all leaf nodes are valid heaps
         for (int i = current_size / 2; i > 0; i--)
         {
             heapify(i);
@@ -99,7 +105,11 @@ private:
         int left_child_index = index << 1;
         int right_child_index = (index << 1) + 1;
 
-        if (left_child_index <= current_size)
+        bool left_child_exists = left_child_index <= current_size;
+        bool right_child_exists = right_child_index <= current_size;
+
+        // check if left subtree is a valid heap
+        if (left_child_exists)
         {
             if (!is_higher_priority(parent_index, left_child_index))
                 return false;
@@ -108,7 +118,8 @@ private:
                 return false;
         }
 
-        if (right_child_index <= current_size)
+        // check if right subtree is a valid heap
+        if (right_child_exists)
         {
             if (!is_higher_priority(parent_index, right_child_index))
                 return false;
@@ -157,7 +168,7 @@ private:
         }
 
         // rebuild heap
-        std::reverse(sorted_data.begin(), sorted_data.end()); // reverse the vector since it will be in descending order
+        std::reverse(sorted_data.begin(), sorted_data.end()); // reverse the vector since its originally in descending order
         for (int i = 1; i <= original_size; i++)
         {
             data[i] = sorted_data[i - 1];
@@ -207,11 +218,13 @@ public:
 
     void push(T item)
     {
+        // check if there is enough room for the new element, resize if necessary
         if (current_size + 1 > capacity)
         {
             increase_capacity();
         }
 
+        // bubble up the new item to its proper level
         current_size += 1;
         data[current_size] = item;
         push_up(current_size);
@@ -222,7 +235,6 @@ public:
         // case 1: swap head with tail, decrement size, heapify the new head, return old head
         if (current_size > 1)
         {
-
             swap(1, current_size);
             current_size -= 1;
             heapify(1);
@@ -245,6 +257,7 @@ public:
 
     std::vector<T> heap_sort()
     {
+        // use helper methods since heap_sort algoirthm will be different for min and max heaps
         if (is_min_heap())
         {
             return min_heap_sort();
