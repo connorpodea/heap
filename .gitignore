@@ -1,0 +1,22 @@
+# --- Compiled Files ---
+*.o
+*.obj
+*.exe
+*.out
+*.app
+
+# --- IDE & Editor Folders ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- Build Directories ---
+build/
+bin/
+debug/
+release/
+
+# --- OS Specific ---
+.DS_Store
+Thumbs.db
